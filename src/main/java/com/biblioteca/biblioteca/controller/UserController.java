@@ -2,7 +2,9 @@ package com.biblioteca.biblioteca.controller;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 // Utilitários do springBoot
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import com.biblioteca.biblioteca.model.Customer;
@@ -107,4 +110,48 @@ public class UserController {
         boolean isValid = userService.validateRole(id, role);
         return ResponseEntity.ok(isValid);
     }
+
+    @PutMapping("/updateCustomer/{id}")
+    public ResponseEntity<?> updateCustomer(@PathVariable Long id, @RequestBody Customer userDetails) {
+        try {
+            User updatedUser = userService.updateCustomer(id, userDetails);
+            return ResponseEntity.ok(updatedUser);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/updateEmployee/{id}")
+    public ResponseEntity<?> updateEmployee(@PathVariable Long id, @RequestBody Employee userDetails) {
+        try {
+            User updatedUser = userService.updateEmployee(id, userDetails);
+            return ResponseEntity.ok(updatedUser);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/changeUserActiveStatus/{id}")
+    public ResponseEntity<?> changeUserActiveStatus(@PathVariable Long id) {
+        try {
+            User updatedUser = userService.toggleUserActiveStatus(id);
+            return ResponseEntity.ok(updatedUser);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+
+    @GetMapping("/getUserByName")
+    public ResponseEntity<List<User>> getUserByName(@RequestParam String name) {
+        List<User> usuarios = userService.findUsersByName(name);
+        return ResponseEntity.ok(usuarios);
+    }
+
+    @GetMapping("/getUserByEmail")
+    public ResponseEntity<List<User>> getUserByEmail(@RequestParam String email) {
+        List<User> usuarios = userService.findUsersByEmail(email);
+        return ResponseEntity.ok(usuarios);
+    }
+    
 }
