@@ -7,10 +7,14 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface BookCollectionRepository extends JpaRepository<BookCollection, Long> {
     List<BookCollection> findByBookId(Long bookId);  // Buscar acervo pelo ID do livro
+
+    @Query("SELECT bc FROM BookCollection bc WHERE bc.book.id = :bookId")
+    Optional<BookCollection> OptionalFindByBookId(@Param("bookId") Long bookId);
 
     @Query("SELECT bc FROM BookCollection bc WHERE bc.book.isbn = :isbn")
     List<BookCollection> findByBookIsbn(@Param("isbn") String isbn);
