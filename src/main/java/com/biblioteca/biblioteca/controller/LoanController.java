@@ -38,4 +38,10 @@ public class LoanController {
     public Optional<Loan> getLoanById(@PathVariable Long loanId) {
         return loanService.findLoanById(loanId);
     }
+
+    // Endpoint para a devolução de um livro
+    @PutMapping("/return/{loanId}")
+    public String returnBook(@PathVariable Long loanId) {
+        return loanService.returnBook(loanId);
+    }
 }
