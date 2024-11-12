@@ -46,11 +46,12 @@ public class BookReservationRequestService {
     public Boolean updateRequestStatus(Long requestId, String status, Long approverId) {
         BookReservationRequest request = bookReservationRequestRepository.findById(requestId)
                 .orElseThrow(() -> new IllegalArgumentException("Solicitação não encontrada"));
-        request.setStatus(status);
 
         if (!"pendente".equals(request.getStatus())) {
             throw new IllegalStateException("Apenas solicitações pendentes podem ser aprovadas");
         }
+
+        request.setStatus(status);
 
         if ("reprovado".equals(status)) {
             // Retorna o livro ao acervo em caso de reprovação

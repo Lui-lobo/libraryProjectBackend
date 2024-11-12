@@ -49,4 +49,9 @@ public class LoanRequestController {
         }
         return ResponseEntity.notFound().build();
     }
+
+    @GetMapping("/{loanRequestId}")
+    public LoanRequest getLoanRequestById(@PathVariable Long loanRequestId) {
+        return loanRequestService.findLoanRequestById(loanRequestId);
+    }
 }

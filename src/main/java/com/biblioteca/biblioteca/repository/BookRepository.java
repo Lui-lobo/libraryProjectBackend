@@ -24,5 +24,7 @@ public interface BookRepository extends JpaRepository<Book, Long> {
  
      Optional<Book> findByIsbnAndIdNot(String isbn, Long excludeBookId);
 
+     Optional<Book> findById(Long bookId);
+
 }
 

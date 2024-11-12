@@ -115,4 +115,9 @@ public class BookService implements BookServiceInterface  {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Livro não encontrado.");
         }
     }
+
+    public Book findBookById(Long bookId) {
+        return BookRepository.findById(bookId)
+                .orElseThrow(() -> new IllegalArgumentException("Livro não encontrado"));
+    }
 }

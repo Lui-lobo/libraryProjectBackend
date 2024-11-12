@@ -106,5 +106,10 @@ public class BooksController {
             return ResponseEntity.status(e.getStatusCode()).body(e.getReason());
         }
     }
+
+    @GetMapping("/{bookId}")
+    public Book getBookById(@PathVariable Long bookId) {
+        return bookService.findBookById(bookId);
+    }
     
 }

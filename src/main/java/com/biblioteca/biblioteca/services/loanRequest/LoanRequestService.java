@@ -98,4 +98,9 @@ public class LoanRequestService {
     public List<LoanRequest> getLoanRequestsByStatus(String status) {
         return loanRequestRepository.findByStatus(status);
     }
+
+    public LoanRequest findLoanRequestById(Long loanRequestId) {
+        return loanRequestRepository.findById(loanRequestId)
+                .orElseThrow(() -> new IllegalArgumentException("Requisição de empréstimo não encontrada"));
+    }
 }
