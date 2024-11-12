@@ -103,4 +103,30 @@ public class LoanRequestService {
         return loanRequestRepository.findById(loanRequestId)
                 .orElseThrow(() -> new IllegalArgumentException("Requisição de empréstimo não encontrada"));
     }
+
+    public List<LoanRequest> findLoanRequestsByUserIdAndStatus(Long userId, String status) {
+        return loanRequestRepository.findByCustomerIdAndStatus(userId, status);
+    }
+
+    public boolean cancelLoanRequest(Long requestId) {
+        LoanRequest loanRequest = loanRequestRepository.findById(requestId)
+                .orElseThrow(() -> new IllegalArgumentException("Solicitação de empréstimo não encontrada"));
+
+        // Verifica se a solicitação já foi cancelada ou concluída
+        if ("cancelado".equalsIgnoreCase(loanRequest.getStatus())) {
+            return false; // Já está cancelada
+        }
+
+        // Atualiza o status da solicitação
+        loanRequest.setStatus("cancelado");
+        loanRequestRepository.save(loanRequest);
+
+        // Adiciona o livro de volta ao acervo
+        BookCollection bookCollection = bookCollectionRepository.OptionalFindByBookId(loanRequest.getIdBook())
+                .orElseThrow(() -> new IllegalArgumentException("Livro não encontrado no acervo"));
+        bookCollection.addCopies(1);
+        bookCollectionRepository.save(bookCollection);
+
+        return true;
+    }
 }

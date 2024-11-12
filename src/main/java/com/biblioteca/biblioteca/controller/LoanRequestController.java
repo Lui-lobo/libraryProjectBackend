@@ -3,6 +3,7 @@ package com.biblioteca.biblioteca.controller;
 import com.biblioteca.biblioteca.model.LoanRequest;
 import com.biblioteca.biblioteca.services.loanRequest.LoanRequestService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -53,5 +54,23 @@ public class LoanRequestController {
     @GetMapping("/{loanRequestId}")
     public LoanRequest getLoanRequestById(@PathVariable Long loanRequestId) {
         return loanRequestService.findLoanRequestById(loanRequestId);
+    }
+
+    @GetMapping("/client/{userId}/status/{status}")
+    public List<LoanRequest> getLoanRequestsByUserIdAndStatus(
+            @PathVariable Long userId,
+            @PathVariable String status) {
+        return loanRequestService.findLoanRequestsByUserIdAndStatus(userId, status);
+    }
+
+    @PutMapping("/cancel/{requestId}")
+    public ResponseEntity<String> cancelLoanRequest(@PathVariable Long requestId) {
+        boolean isCancelled = loanRequestService.cancelLoanRequest(requestId);
+
+        if (isCancelled) {
+            return ResponseEntity.ok("Solicitação de empréstimo cancelada com sucesso.");
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Solicitação já estava cancelada ou inválida.");
+        }
     }
 }
