@@ -3,6 +3,7 @@ package com.biblioteca.biblioteca.controller;
 import com.biblioteca.biblioteca.model.Loan;
 import com.biblioteca.biblioteca.services.loanService.LoanService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -43,5 +44,27 @@ public class LoanController {
     @PutMapping("/return/{loanId}")
     public String returnBook(@PathVariable Long loanId) {
         return loanService.returnBook(loanId);
+    }
+
+    // Endpoint para listar todos os empréstimos (acesso para administrador)
+    @GetMapping("/all")
+    public ResponseEntity<List<Loan>> getAllLoans() {
+        List<Loan> loans = loanService.getAllLoans();
+        return ResponseEntity.ok(loans);
+    }
+
+    // Endpoint para listar todos os empréstimos de um usuário específico
+    @GetMapping("/client/new/{customerId}")
+    public ResponseEntity<List<Loan>> getLoansByCustomerId(@PathVariable Long customerId) {
+        List<Loan> loans = loanService.getLoansByCustomerId(customerId);
+        return ResponseEntity.ok(loans);
+    }
+
+    @GetMapping("/findByCustomerAndStatus")
+    public ResponseEntity<List<Loan>> getLoansByCustomerIdAndStatus(
+            @RequestParam Long customerId,
+            @RequestParam String status) {
+        List<Loan> loans = loanService.getLoansByCustomerIdAndStatus(customerId, status);
+        return ResponseEntity.ok(loans);
     }
 }

@@ -56,6 +56,13 @@ public class LoanRequestController {
         return loanRequestService.findLoanRequestById(loanRequestId);
     }
 
+    // Rota para trazer um livro pelo id em uma lista
+    @GetMapping("/list/{loanRequestId}")
+    public ResponseEntity<List<LoanRequest>> getLoanRequestByIdInList(@PathVariable Long loanRequestId) {
+        List<LoanRequest> loanRequests = loanRequestService.findLoanRequestByIdAndReturnInList(loanRequestId);
+        return ResponseEntity.ok(loanRequests);
+    }
+
     @GetMapping("/client/{userId}/status/{status}")
     public List<LoanRequest> getLoanRequestsByUserIdAndStatus(
             @PathVariable Long userId,
@@ -72,5 +79,11 @@ public class LoanRequestController {
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Solicitação já estava cancelada ou inválida.");
         }
+    }
+
+    @GetMapping("/listByBook/{bookId}")
+    public ResponseEntity<List<LoanRequest>> getLoanRequestsByBookId(@PathVariable Long bookId) {
+        List<LoanRequest> loanRequests = loanRequestService.getLoanRequestsByBookId(bookId);
+        return ResponseEntity.ok(loanRequests);
     }
 }

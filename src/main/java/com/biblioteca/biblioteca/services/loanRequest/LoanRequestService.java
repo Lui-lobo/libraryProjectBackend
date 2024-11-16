@@ -104,6 +104,10 @@ public class LoanRequestService {
                 .orElseThrow(() -> new IllegalArgumentException("Requisição de empréstimo não encontrada"));
     }
 
+    public List<LoanRequest> findLoanRequestByIdAndReturnInList(Long loanRequestId) {
+        return loanRequestRepository.findByIdAndReturnInList(loanRequestId);
+    }
+
     public List<LoanRequest> findLoanRequestsByUserIdAndStatus(Long userId, String status) {
         return loanRequestRepository.findByCustomerIdAndStatus(userId, status);
     }
@@ -128,5 +132,9 @@ public class LoanRequestService {
         bookCollectionRepository.save(bookCollection);
 
         return true;
+    }
+
+    public List<LoanRequest> getLoanRequestsByBookId(Long bookId) {
+        return loanRequestRepository.findByBookId(bookId);
     }
 }

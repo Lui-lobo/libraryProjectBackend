@@ -72,4 +72,16 @@ public class LoanService {
 
         return "Livro devolvido com sucesso.";
     }
+
+    public List<Loan> getAllLoans() {
+        return loanRepository.findAllLoans();
+    }
+
+    public List<Loan> getLoansByCustomerId(Long customerId) {
+        return loanRepository.findByCustomerId(customerId);
+    }
+
+    public List<Loan> getLoansByCustomerIdAndStatus(Long customerId, String status) {
+        return loanRepository.findByCustomerIdAndStatus(customerId, status);
+    }
 }
