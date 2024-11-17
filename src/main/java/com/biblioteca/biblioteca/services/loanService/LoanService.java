@@ -40,6 +40,11 @@ public class LoanService {
         return loanRepository.findById(loanId);
     }
 
+    // Buscar empréstimos pelo ID do livro
+    public List<Loan> findLoansByIdAndReturnInList(Long bookId) {
+        return loanRepository.findByIdAndReturnInList(bookId);
+    }
+
     // Devolução de livro
     public String returnBook(Long loanId) {
         Optional<Loan> loanOpt = loanRepository.findById(loanId);

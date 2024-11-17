@@ -27,4 +27,7 @@ public interface LoanRepository extends JpaRepository<Loan, Long> {
 
     @Query("SELECT l FROM Loan l WHERE l.idCliente = :customerId AND l.status = :status")
     List<Loan> findByCustomerIdAndStatus(Long customerId, String status);
+
+    @Query("SELECT l FROM Loan l WHERE l.id = :loanId") // Retorna os empréstimos de um usuário
+    List<Loan> findByIdAndReturnInList(Long loanId);
 }

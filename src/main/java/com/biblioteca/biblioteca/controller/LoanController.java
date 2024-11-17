@@ -40,6 +40,11 @@ public class LoanController {
         return loanService.findLoanById(loanId);
     }
 
+    @GetMapping("listId/{loanId}")
+    public ResponseEntity<List<Loan>> getLoanByIdAndReturnInList(@PathVariable Long loanId) {
+        return ResponseEntity.ok(loanService.findLoansByIdAndReturnInList(loanId));
+    }
+
     // Endpoint para a devolução de um livro
     @PutMapping("/return/{loanId}")
     public String returnBook(@PathVariable Long loanId) {
