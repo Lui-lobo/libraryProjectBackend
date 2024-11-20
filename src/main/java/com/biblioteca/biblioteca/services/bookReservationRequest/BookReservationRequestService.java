@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Collections;
 
 @Service
 public class BookReservationRequestService {
@@ -23,6 +24,22 @@ public class BookReservationRequestService {
 
     @Autowired
     private BookReservationRepository bookReservationRepository;
+
+    public void cancelReservationRequest(Long reservationRequestId) {
+        // Busca a solicitação de reserva pelo ID
+        BookReservationRequest reservationRequest = bookReservationRequestRepository.findById(reservationRequestId)
+                .orElseThrow(() -> new IllegalArgumentException("Solicitação de reserva não encontrada"));
+    
+        // Atualiza o status para "cancelado"
+        reservationRequest.setStatus("cancelado");
+        bookReservationRequestRepository.save(reservationRequest);
+    
+        // Retorna a cópia ao acervo
+        BookCollection bookCollection = bookCollectionRepository.OptionalFindByBookId(reservationRequest.getBookId())
+                .orElseThrow(() -> new IllegalArgumentException("Livro não encontrado no acervo"));
+        bookCollection.addCopies(1);
+        bookCollectionRepository.save(bookCollection);
+    }
 
     public BookReservationRequest createReservationRequest(Long customerId, Long bookId) {
         BookCollection bookCollection = bookCollectionRepository.OptionalFindByBookId(bookId)
@@ -79,4 +96,21 @@ public class BookReservationRequestService {
         return true;
     }
 
+    public List<BookReservationRequest> findAllReservationRequests() {
+        return bookReservationRequestRepository.findAll();
+    }
+
+    public List<BookReservationRequest> findRequestsByCustomerId(Long customerId) {
+        return bookReservationRequestRepository.findByCustomerId(customerId);
+    }
+
+    public List<BookReservationRequest> findRequestsByBookId(Long bookId) {
+        return bookReservationRequestRepository.findByBookId(bookId);
+    }
+
+    public List<BookReservationRequest> findReservationRequestById(Long id) {
+        return bookReservationRequestRepository.findById(id)
+                .map(Collections::singletonList)
+                .orElse(Collections.emptyList());
+    }
 }

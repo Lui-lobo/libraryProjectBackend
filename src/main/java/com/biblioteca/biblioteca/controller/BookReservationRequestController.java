@@ -32,4 +32,22 @@ public class BookReservationRequestController {
         bookReservationRequestService.updateRequestStatus(id, status, approverId);
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/customer/{customerId}")
+    public ResponseEntity<List<BookReservationRequest>> getRequestsByCustomerId(@PathVariable Long customerId) {
+        List<BookReservationRequest> reservationRequests = bookReservationRequestService.findRequestsByCustomerId(customerId);
+        return ResponseEntity.ok(reservationRequests);
+    }
+
+    @GetMapping("/book/{bookId}")
+    public ResponseEntity<List<BookReservationRequest>> getRequestsByBookId(@PathVariable Long bookId) {
+        List<BookReservationRequest> reservationRequests = bookReservationRequestService.findRequestsByBookId(bookId);
+        return ResponseEntity.ok(reservationRequests);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<List<BookReservationRequest>> getReservationRequestById(@PathVariable Long id) {
+        List<BookReservationRequest> reservationRequest = bookReservationRequestService.findReservationRequestById(id);
+        return ResponseEntity.ok(reservationRequest);
+    }
 }
