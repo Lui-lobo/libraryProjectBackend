@@ -103,4 +103,51 @@ public class BookReservationService {
 
         return true;  // Retorna true para indicar que a conversão foi bem-sucedida
     }
+
+    public List<BookReservation> getReservationsByCustomerId(Long customerId) {
+        return bookReservationRepository.findAllByCustomerId(customerId);
+    }
+
+    public List<BookReservation> getReservationsByCustomerIdAndStatus(Long customerId, String status) {
+        return bookReservationRepository.findAllByCustomerIdAndStatus(customerId, status);
+    }
+    
+    public BookReservation getReservationById(Long reservationId) {
+        return bookReservationRepository.findById(reservationId)
+                .orElseThrow(() -> new IllegalArgumentException("Reserva não encontrada com o ID fornecido."));
+    }
+
+    public List<BookReservation> getAllReservations() {
+        return bookReservationRepository.findAllReservations();
+    }
+
+    public List<BookReservation> getReservationByIdAsList(Long reservationId) {
+        return bookReservationRepository.findReservationByIdAsList(reservationId);
+    }
+
+    public List<BookReservation> getReservationsByBookId(Long bookId) {
+        return bookReservationRepository.findReservationsByBookId(bookId);
+    }
+
+    public List<BookReservation> getReservationsByCustomerIdInList(Long customerId) {
+        return bookReservationRepository.findReservationsByCustomerId(customerId);
+    }
+
+    public boolean cancelReservationForReservations(Long reservationId) {
+        // Busca a reserva pelo ID
+        BookReservation reservation = bookReservationRepository.findById(reservationId)
+                .orElseThrow(() -> new IllegalArgumentException("Reserva não encontrada"));
+
+        // Atualiza o status da reserva
+        reservation.setStatus("cancelada");
+        bookReservationRepository.save(reservation);
+
+        // Devolve o livro para o acervo
+        BookCollection bookCollection = bookCollectionRepository.OptionalFindByBookId(reservation.getBookId())
+                .orElseThrow(() -> new IllegalArgumentException("Livro não encontrado no acervo"));
+        bookCollection.addCopies(1);
+        bookCollectionRepository.save(bookCollection);
+
+        return true;
+    }
 }

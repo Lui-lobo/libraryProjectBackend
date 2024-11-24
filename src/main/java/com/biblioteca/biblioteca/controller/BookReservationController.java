@@ -85,4 +85,70 @@ public class BookReservationController {
         List<BookReservationRequest> reservationRequests = bookReservationRequestService.findAllReservationRequests();
         return ResponseEntity.ok(reservationRequests);
     }
+
+    // Apis referentes a tela de management de reserva
+    @GetMapping("/customer/{customerId}")
+    public ResponseEntity<List<BookReservation>> getReservationsByCustomer(@PathVariable Long customerId) {
+        List<BookReservation> reservations = bookReservationService.getReservationsByCustomerId(customerId);
+        return ResponseEntity.ok(reservations);
+    }
+
+    @GetMapping("/customer/{customerId}/status/{status}")
+    public ResponseEntity<List<BookReservation>> getReservationsByCustomerAndStatus(
+            @PathVariable Long customerId, 
+            @PathVariable String status) {
+        List<BookReservation> reservations = bookReservationService.getReservationsByCustomerIdAndStatus(customerId, status);
+        return ResponseEntity.ok(reservations);
+    }
+
+    @GetMapping("/getReservation/{reservationId}")
+    public ResponseEntity<BookReservation> getReservationByIdForReservations(@PathVariable Long reservationId) {
+        BookReservation reservation = bookReservationService.getReservationById(reservationId);
+        return ResponseEntity.ok(reservation);
+    }
+
+    @GetMapping("/getAllReservations")
+    public ResponseEntity<List<BookReservation>> getAllReservations() {
+        List<BookReservation> reservations = bookReservationService.getAllReservations();
+        return ResponseEntity.ok(reservations);
+    }
+
+    @GetMapping("/getReservationByIdInList/{reservationId}")
+    public ResponseEntity<List<BookReservation>> getReservationByIdAsList(@PathVariable Long reservationId) {
+        List<BookReservation> reservations = bookReservationService.getReservationByIdAsList(reservationId);
+        return ResponseEntity.ok(reservations);
+    }
+
+    @GetMapping("/book/{bookId}")
+    public ResponseEntity<List<BookReservation>> getReservationsByBookId(@PathVariable Long bookId) {
+        List<BookReservation> reservations = bookReservationService.getReservationsByBookId(bookId);
+        return ResponseEntity.ok(reservations);
+    }
+
+    @GetMapping("/customerInList/{customerId}")
+    public ResponseEntity<List<BookReservation>> getReservationsByCustomerId(@PathVariable Long customerId) {
+        List<BookReservation> reservations = bookReservationService.getReservationsByCustomerIdInList(customerId);
+        return ResponseEntity.ok(reservations);
+    }
+
+    @PutMapping("/cancelReservation/{reservationId}")
+    public ResponseEntity<String> cancelReservationForReservations(@PathVariable Long reservationId) {
+        try {
+            boolean result = bookReservationService.cancelReservationForReservations(reservationId);
+            return ResponseEntity.ok("Reserva cancelada com sucesso");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/transformInReservation/{reservationId}")
+    public ResponseEntity<String> transformReservationInLoan(@PathVariable Long reservationId,  @RequestParam Long employeeId) {
+        try {
+            boolean result = bookReservationService.convertReservationToLoan(reservationId, employeeId);
+            return ResponseEntity.ok("Reserva transformada em emprestimo com sucesso");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
 }
